@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), #000 url("../images/background.png") center / cover no-repeat;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  font-family: "Rajdhani", system-ui, sans-serif;
+  color: #fff;
+  text-align: center;
+}
+
+h1,
+h2 {
+  position: absolute;
+  top: 1.5rem;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 3rem;
+}
+
+p {
+  max-width: 40rem;
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 20rem;
+  max-width: 90vw;
+}
+
+.button {
+  padding: 1.1rem 1.5rem;
+  font-size: 1.5rem;
+  color: #111;
+  text-decoration: none;
+  background: #fff;
+  border: 2px solid #fff;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: #ddd;
+  border-color: #ddd;
+  outline: none;
+}
+
+.back {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  width: 20rem;
+  max-width: 90vw;
+  text-align: center;
+  transform: translateX(-50%);
+}

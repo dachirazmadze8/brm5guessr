@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play · brm5guessr</title>
+<link rel="stylesheet" href="lib/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/game.css">
+</head>
+<body class="game">
+  <aside id="sidebar">
+    <div id="photowrap">
+      <img id="photo" alt="">
+      <div id="photomsg"></div>
+    </div>
+    <div id="bar"><div id="barfill"></div></div>
+    <div id="mapname"></div>
+    <ol id="rounds"></ol>
+    <div id="total">0</div>
+    <p id="resulttext"></p>
+    <div id="actions">
+      <div id="rotatebox">
+        <label for="rotate">Rotation</label>
+        <input id="rotate" type="range" min="0" max="359" value="0">
+        <span id="rotval">0°</span>
+      </div>
+      <button id="guessbtn" class="button" disabled>Guess</button>
+      <button id="nextbtn" class="button" hidden>Next round</button>
+      <a id="quit" href="maps.html">Quit</a>
+    </div>
+  </aside>
+
+  <div id="guessmap"></div>
+
+  <div id="final" hidden>
+    <h2>Final score</h2>
+    <p id="finaltext"></p>
+    <button id="again" class="button">Play again</button>
+    <a class="button" href="maps.html">Maps</a>
+  </div>
+
+  <script src="lib/leaflet/leaflet.js"></script>
+  <script src="lib/leaflet/leaflet-rotate.js"></script>
+  <script src="maps.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
