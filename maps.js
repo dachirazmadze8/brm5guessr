@@ -70,6 +70,8 @@ var MAPS = {
       { image: "images/nyc/61.png", grid: "00320 00796" },
       { image: "images/nyc/62.png", grid: "00365 00532" },
       { image: "images/nyc/63.png", grid: "00415 00702" }
+      { image: "images/nyc/64.png", grid: "00718 01016" }
+      { image: "images/nyc/65.png", grid: "00498 00935" }
     ]
   }
 };
