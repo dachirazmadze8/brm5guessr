@@ -55,6 +55,8 @@
   var guessMarker = null;
   var extras = [];
   var autoFit = true;
+  var swapped = false;
+  var resultBounds = null;
 
   var bounds = [[0, 0], [cfg.gridHeight, cfg.gridWidth]];
   var map = L.map("guessmap", {
@@ -88,6 +90,10 @@
   });
 
   map.on("click", function (e) {
+    if (swapped) {
+      swap();
+      return;
+    }
     if (answered) return;
     guess = e.latlng;
     if (guessMarker) {
@@ -99,24 +105,122 @@
   });
 
   function limitZoom() {
+    if (map.getBearing() !== 0) return;
     map.setMinZoom(map.getBoundsZoom(bounds));
   }
 
-  function updateDragging() {
-    if (map.getZoom() > map.getBoundsZoom(bounds) + 0.01) {
-      map.dragging.enable();
+  function swap() {
+    swapped = !swapped;
+    var small = $("smallslot");
+    var big = $("bigslot");
+    if (swapped) {
+      small.appendChild($("guessmap"));
+      big.appendChild($("photowrap"));
     } else {
-      map.dragging.disable();
+      small.appendChild($("photowrap"));
+      big.appendChild($("guessmap"));
+    }
+    resetPhoto();
+    setTimeout(function () {
+      map.invalidateSize();
+      limitZoom();
+      if (resultBounds) {
+        map.fitBounds(resultBounds, { padding: [90, 90], maxZoom: 2 });
+      } else if (autoFit) {
+        map.fitBounds(bounds);
+      }
+    }, 50);
+  }
+
+  var wrap = $("photowrap");
+  var photo = $("photo");
+  var view = { s: 1, tx: 0, ty: 0 };
+  var dragging = false;
+  var moved = false;
+  var lastX = 0;
+  var lastY = 0;
+  photo.draggable = false;
+
+  function applyView() {
+    photo.style.transformOrigin = "0 0";
+    photo.style.transform =
+      "translate(" + view.tx + "px, " + view.ty + "px) scale(" + view.s + ")";
+  }
+
+  function clampView() {
+    var r = wrap.getBoundingClientRect();
+    view.tx = Math.min(0, Math.max(r.width - r.width * view.s, view.tx));
+    view.ty = Math.min(0, Math.max(r.height - r.height * view.s, view.ty));
+  }
+
+  function resetPhoto() {
+    view = { s: 1, tx: 0, ty: 0 };
+    dragging = false;
+    if (swapped) {
+      applyView();
+    } else {
+      photo.style.transformOrigin = "50% 50%";
+      photo.style.transform = "scale(1)";
     }
   }
 
-  map.on("zoomend moveend", function () {
-    var min = map.getBoundsZoom(bounds);
-    if (map.getZoom() < min - 0.001) {
-      map.setMinZoom(min);
-      map.fitBounds(bounds, { animate: false });
+  wrap.addEventListener("mousemove", function (e) {
+    if (!swapped) {
+      var r = wrap.getBoundingClientRect();
+      var x = ((e.clientX - r.left) / r.width) * 100;
+      var y = ((e.clientY - r.top) / r.height) * 100;
+      photo.style.transformOrigin = x + "% " + y + "%";
+      photo.style.transform = "scale(2.5)";
+      return;
     }
-    updateDragging();
+    if (!dragging) return;
+    if (Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY) > 0) moved = true;
+    view.tx += e.clientX - lastX;
+    view.ty += e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    clampView();
+    applyView();
+  });
+  wrap.addEventListener("mouseleave", function () {
+    dragging = false;
+    if (!swapped) photo.style.transform = "scale(1)";
+  });
+  wrap.addEventListener("mousedown", function (e) {
+    if (!swapped) return;
+    dragging = true;
+    moved = false;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    e.preventDefault();
+  });
+  window.addEventListener("mouseup", function () {
+    dragging = false;
+  });
+  wrap.addEventListener(
+    "wheel",
+    function (e) {
+      if (!swapped) return;
+      e.preventDefault();
+      var r = wrap.getBoundingClientRect();
+      var cx = e.clientX - r.left;
+      var cy = e.clientY - r.top;
+      var next = Math.min(6, Math.max(1, view.s * Math.exp(-e.deltaY * 0.0015)));
+      var k = next / view.s;
+      view.tx = cx - (cx - view.tx) * k;
+      view.ty = cy - (cy - view.ty) * k;
+      view.s = next;
+      clampView();
+      applyView();
+    },
+    { passive: false }
+  );
+  wrap.addEventListener("click", function () {
+    if (swapped && moved) {
+      moved = false;
+      return;
+    }
+    swap();
   });
 
   function refit() {
@@ -146,6 +250,8 @@
     var loc = locations[round];
     answered = false;
     guess = null;
+    resultBounds = null;
+    if (swapped) swap();
 
     if (guessMarker) {
       map.removeLayer(guessMarker);
@@ -198,6 +304,9 @@
     extras.push(
       L.polyline([guess, actual], { color: "#fff", dashArray: "6 8" }).addTo(map)
     );
+
+    resultBounds = L.latLngBounds([guess, actual]);
+    if (swapped) swap();
 
     var row = rows[round];
     row.querySelector(".d").textContent = formatDistance(distance);

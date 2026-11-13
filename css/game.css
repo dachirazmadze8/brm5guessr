@@ -22,7 +22,7 @@ body.game {
   background: #333;
 }
 
-#photowrap {
+#smallslot {
   position: relative;
   flex: none;
   aspect-ratio: 16 / 9;
@@ -31,11 +31,37 @@ body.game {
   border-radius: 0.4rem;
 }
 
+#bigslot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+#photowrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  cursor: zoom-in;
+}
+
 #photo {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.12s ease-out;
+}
+
+#bigslot #photo {
+  object-fit: contain;
+  transition: none;
+}
+
+#bigslot #photowrap {
+  cursor: grab;
 }
 
 #photomsg {
@@ -183,9 +209,17 @@ button.button[hidden] {
 }
 
 #guessmap {
-  flex: 1;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   background: #475a67;
+}
+
+#smallslot #guessmap {
+  cursor: pointer;
+}
+
+#smallslot .leaflet-control-zoom {
+  display: none;
 }
 
 #final {
@@ -225,7 +259,7 @@ button.button[hidden] {
     max-height: 58vh;
   }
 
-  #guessmap {
+  #bigslot {
     flex: 1;
     min-height: 0;
   }
