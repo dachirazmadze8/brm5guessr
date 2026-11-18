@@ -96,6 +96,22 @@ body.game {
   text-align: center;
 }
 
+#mapname .easy {
+  color: #29d829;
+}
+
+#mapname .medium {
+  color: #e5ca44;
+}
+
+#mapname .hard {
+  color: #d61d21;
+}
+
+#mapname .extreme {
+  color: #771d21;
+}
+
 #rounds {
   flex: none;
   margin: 0;
@@ -212,6 +228,11 @@ button.button[hidden] {
   position: absolute;
   inset: 0;
   background: #475a67;
+}
+
+#guessmap.rotating,
+#guessmap.rotating * {
+  cursor: ew-resize !important;
 }
 
 #smallslot #guessmap {

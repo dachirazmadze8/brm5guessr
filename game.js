@@ -14,6 +14,7 @@
 
   var MAX_ROUNDS = 5;
   var MAX_POINTS = 500;
+  var PERFECT_METERS = 10;
 
   function $(id) {
     return document.getElementById(id);
@@ -231,8 +232,6 @@
 
   window.addEventListener("resize", refit);
 
-  $("mapname").textContent = cfg.name;
-
   var rows = locations.map(function (loc, i) {
     var li = document.createElement("li");
     li.innerHTML =
@@ -272,6 +271,16 @@
     $("total").textContent = total;
     updateProgress();
 
+    var level = (loc.difficulty || "").toLowerCase();
+    var box = $("mapname");
+    box.textContent = "";
+    if (level) {
+      var tag = document.createElement("span");
+      tag.className = level;
+      tag.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+      box.appendChild(document.createTextNode("Difficulty: "));
+      box.appendChild(tag);
+    }
     $("photomsg").textContent = "";
     $("photo").src = loc.image;
 
@@ -289,7 +298,10 @@
     var loc = locations[round];
     var actual = parseGrid(loc.grid);
     var distance = map.distance(guess, actual);
-    var points = Math.round(MAX_POINTS * Math.exp(-distance / cfg.scale));
+    var graceUnits = PERFECT_METERS / cfg.metersPerUnit;
+    var points = Math.round(
+      MAX_POINTS * Math.exp(-Math.max(0, distance - graceUnits) / cfg.scale)
+    );
     total += points;
 
     extras.push(
@@ -349,6 +361,37 @@
     $("photomsg").textContent =
       "Image not found: " + locations[round].image;
   });
+  var rotating = false;
+  var rotateX = 0;
+
+  function setRotation(deg) {
+    var d = ((Math.round(deg) % 360) + 360) % 360;
+    map.setBearing(d);
+    $("rotate").value = d;
+    $("rotval").textContent = d + "°";
+  }
+
+  $("guessmap").addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+  $("guessmap").addEventListener("mousedown", function (e) {
+    if (e.button !== 2) return;
+    rotating = true;
+    rotateX = e.clientX;
+    $("guessmap").classList.add("rotating");
+    e.preventDefault();
+  });
+  window.addEventListener("mousemove", function (e) {
+    if (!rotating) return;
+    setRotation(map.getBearing() + (e.clientX - rotateX) * 0.4);
+    rotateX = e.clientX;
+  });
+  window.addEventListener("mouseup", function (e) {
+    if (e.button !== 2 || !rotating) return;
+    rotating = false;
+    $("guessmap").classList.remove("rotating");
+  });
+
   $("rotate").addEventListener("input", function () {
     map.setBearing(Number(this.value));
     $("rotval").textContent = this.value + "°";
