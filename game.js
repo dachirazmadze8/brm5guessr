@@ -14,7 +14,7 @@
 
   var MAX_ROUNDS = 5;
   var MAX_POINTS = 500;
-  var PERFECT_METERS = 10;
+  var PERFECT_METERS = 20;
 
   function $(id) {
     return document.getElementById(id);

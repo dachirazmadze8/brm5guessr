@@ -1,0 +1,139 @@
+html {
+  height: auto;
+  min-height: 100%;
+  background-attachment: fixed;
+}
+
+body.gallery {
+  display: block;
+  min-height: 100vh;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+#page {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+body.gallery h2 {
+  position: static;
+  margin: 1rem 0;
+}
+
+#page > .button.small {
+  display: inline-block;
+  float: left;
+}
+
+.button.small {
+  padding: 0.5rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#mapselect {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1.25rem;
+  font: inherit;
+  font-size: 1.2rem;
+  color: #111;
+  background: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+.tab:hover {
+  background: #ddd;
+}
+
+.tab.active {
+  color: #fff;
+  background: #111;
+}
+
+.level {
+  margin: 2rem 0 0.75rem;
+  font-size: 2rem;
+  text-align: left;
+}
+
+.level small {
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.level.easy {
+  color: #29d829;
+}
+
+.level.medium {
+  color: #e5ca44;
+}
+
+.level.hard {
+  color: #d61d21;
+}
+
+.level.extreme {
+  color: #771d21;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.grid figure {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+  cursor: zoom-in;
+}
+
+.grid img.missing {
+  opacity: 0.25;
+}
+
+.grid figcaption {
+  padding: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.empty {
+  margin: 3rem auto;
+}
+
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  cursor: zoom-out;
+}
+
+#lightbox[hidden] {
+  display: none;
+}
+
+#bigphoto {
+  max-width: 95vw;
+  max-height: 95vh;
+}

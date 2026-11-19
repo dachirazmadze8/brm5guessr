@@ -1,0 +1,26 @@
+body.info {
+  justify-content: flex-start;
+  padding: 6rem 1.5rem 3rem;
+}
+
+body.info ul {
+  max-width: 44rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+body.info li {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  line-height: 1.4;
+}
+
+body.info li strong {
+  color: #ff8a3d;
+}
+
+body.info p {
+  font-size: 1.5rem;
+}
